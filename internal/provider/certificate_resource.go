@@ -136,7 +136,7 @@ func (r *certificateResource) Create(ctx context.Context, req resource.CreateReq
 	// Create new certificate
 	tflog.Info(ctx, "Requesting certificate from ADCS server.")
 	tflog.Debug(ctx, "Certificate request Data", structs.Map(plan))
-	certificates, err := r.client.RequestCertificate(plan.CSR.ValueString(), client.TemplateName(plan.Template.ValueString()), attr)
+	certificates, err := r.client.RequestCertificate(plan.CSR.ValueString(), plan.Template.ValueString(), attr)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error creating certificate from singing request",
