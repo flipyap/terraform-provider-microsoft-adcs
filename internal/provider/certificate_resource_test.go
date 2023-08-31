@@ -1,0 +1,51 @@
+package provider
+
+import (
+	"encoding/base64"
+	"testing"
+
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+)
+
+// TODO: make this easy to say "my domain is subdomain.example.com" and we just create the csr using crypto/x509
+const (
+	csr = "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KTUlJQzZEQ0NBZEFDQVFBd0hURWJNQmtHQTFVRUF3d1NaWGhoYlhCc1pTNWtiMjFoYVc0dVkyOXRNSUlCSWpBTgpCZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUF2emVOTUVVUlA1WlR2MU9rNzdTekZtRDRFMnZqCkUvbEJWSmRuVXNZVjdMNmdBcmlhTXpTNmlwNTNVVzcxOWtKSXlJZDFZNm5KRXUwcENRUEljSUovbVVzWnNDTnkKTjlvM0praXNNWFNhcDM2ZDVYTStmWjZySmNnSTd4c25udUFtdmVhcHVuSUVjOHNQdmsrUERpc3FDNXJQYm9LMApsdE1KaDJtTUh1YTN3eTZwNUZTL1V3ekdVdjh1b1ZtYTdNNXU0OFhUeDNyR1FhVlFmeStJZVNXVEVnMjZOUHdsCkR3UTdWbXQ4dUlpcitRUXN3VDg5MU53cVJFQ3FEQTJLMi9qRjRnZHBnT3RNUUROUDdEVE01Mm1IbU5JQldrTS8KU0FiampVK0piaW5rLzJjUS9MQnRVWFAwZ1NURkhkNUJKWkxFamxHSE8vaWlzSitVc3NDdVRxWEN0UUlEQVFBQgpvSUdGTUlHQ0Jna3Foa2lHOXcwQkNRNHhkVEJ6TUFrR0ExVWRFd1FDTUFBd0N3WURWUjBQQkFRREFnWGdNQjBHCkExVWRKUVFXTUJRR0NDc0dBUVVGQndNQkJnZ3JCZ0VGQlFjREFqQTZCZ05WSFJFRU16QXhnaEpsZUcxaGNHeGwKTG1SdmJXRnBiaTVqYjIyQ0NXeHZZMkZzYUc5emRJSUtiRzlqWVd4b2IzTjBOSWNFZndBQUFUQU5CZ2txaGtpRwo5dzBCQVFzRkFBT0NBUUVBWCtIVWo1VTA1b3FLR2RJR1hVMngrTi9XbitIK2RmK3pBb0ZLSGRBU3VlYUxCNU1jClQ4cDFYcXRaWmJFeEQ5OHI1MmlwUG1TTmhZUWhrU1QwTVhRckdXZDJ3THZyWkw0UmtNaFg3YXc0VHBEWER6Vy8KOXhkWllFMU1ETFZGTGZwaFoyT2k5S0tIdzMxYW03c3lPVlV4SDJDOXlnalFXc1dwU0lFaVEyU2ErWGxRNVh6OQpMOExodGZabzVxbCsveFZPay9kZ1JubGJYdHlvOXNuT0JVcU9OM2hIM1lHWE1XV0l4RkUwWWt5bTFJSURSdjBPCmxsNVpndkE1a3pDTnBIWkRyaUQ3VXNvZzhxS0FDeDhpZWs3VEhYUTBRS0RHWldUa3hmQXdBOTdlTVR2NlhLNTUKTFZvRzZwTTFiTkgwUkthRDFxejBDSTNERnY0MGUyNW5EaWpDUkE9PQotLS0tLUVORCBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0K"
+)
+
+func TestAccCertificateResource(t *testing.T) {
+	decoded_csr, _ := base64.StdEncoding.DecodeString(csr)
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read testing
+			{
+				Config: providerConfig + `
+resource "microsoftadcs_certificate" "test" {
+	certificate_signing_request = base64decode("LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KTUlJQzZEQ0NBZEFDQVFBd0hURWJNQmtHQTFVRUF3d1NaWGhoYlhCc1pTNWtiMjFoYVc0dVkyOXRNSUlCSWpBTgpCZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUF2emVOTUVVUlA1WlR2MU9rNzdTekZtRDRFMnZqCkUvbEJWSmRuVXNZVjdMNmdBcmlhTXpTNmlwNTNVVzcxOWtKSXlJZDFZNm5KRXUwcENRUEljSUovbVVzWnNDTnkKTjlvM0praXNNWFNhcDM2ZDVYTStmWjZySmNnSTd4c25udUFtdmVhcHVuSUVjOHNQdmsrUERpc3FDNXJQYm9LMApsdE1KaDJtTUh1YTN3eTZwNUZTL1V3ekdVdjh1b1ZtYTdNNXU0OFhUeDNyR1FhVlFmeStJZVNXVEVnMjZOUHdsCkR3UTdWbXQ4dUlpcitRUXN3VDg5MU53cVJFQ3FEQTJLMi9qRjRnZHBnT3RNUUROUDdEVE01Mm1IbU5JQldrTS8KU0FiampVK0piaW5rLzJjUS9MQnRVWFAwZ1NURkhkNUJKWkxFamxHSE8vaWlzSitVc3NDdVRxWEN0UUlEQVFBQgpvSUdGTUlHQ0Jna3Foa2lHOXcwQkNRNHhkVEJ6TUFrR0ExVWRFd1FDTUFBd0N3WURWUjBQQkFRREFnWGdNQjBHCkExVWRKUVFXTUJRR0NDc0dBUVVGQndNQkJnZ3JCZ0VGQlFjREFqQTZCZ05WSFJFRU16QXhnaEpsZUcxaGNHeGwKTG1SdmJXRnBiaTVqYjIyQ0NXeHZZMkZzYUc5emRJSUtiRzlqWVd4b2IzTjBOSWNFZndBQUFUQU5CZ2txaGtpRwo5dzBCQVFzRkFBT0NBUUVBWCtIVWo1VTA1b3FLR2RJR1hVMngrTi9XbitIK2RmK3pBb0ZLSGRBU3VlYUxCNU1jClQ4cDFYcXRaWmJFeEQ5OHI1MmlwUG1TTmhZUWhrU1QwTVhRckdXZDJ3THZyWkw0UmtNaFg3YXc0VHBEWER6Vy8KOXhkWllFMU1ETFZGTGZwaFoyT2k5S0tIdzMxYW03c3lPVlV4SDJDOXlnalFXc1dwU0lFaVEyU2ErWGxRNVh6OQpMOExodGZabzVxbCsveFZPay9kZ1JubGJYdHlvOXNuT0JVcU9OM2hIM1lHWE1XV0l4RkUwWWt5bTFJSURSdjBPCmxsNVpndkE1a3pDTnBIWkRyaUQ3VXNvZzhxS0FDeDhpZWs3VEhYUTBRS0RHWldUa3hmQXdBOTdlTVR2NlhLNTUKTFZvRzZwTTFiTkgwUkthRDFxejBDSTNERnY0MGUyNW5EaWpDUkE9PQotLS0tLUVORCBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0K")
+	template = "User"
+  
+  }
+`,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("microsoftadcs_certificate.test", "template", "User"),
+					resource.TestCheckResourceAttr("microsoftadcs_certificate.test", "certificate_signing_request", string(decoded_csr)),
+					// Verify dynamic values have any value set in the state.
+					resource.TestCheckResourceAttrSet("microsoftadcs_certificate.test", "id"),
+					resource.TestCheckResourceAttrSet("microsoftadcs_certificate.test", "certificate_b64"),
+					resource.TestCheckResourceAttrSet("microsoftadcs_certificate.test", "certificate_chain_b64"),
+				),
+			},
+			// ImportState testing
+			{
+				ResourceName:      "microsoftadcs_certificate.test",
+				ImportState:       true,
+				ImportStateVerify: true,
+				// API pieces not returned can be ignored here
+				ImportStateVerifyIgnore: []string{"last_updated", "template", "certificate_signing_request"},
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
