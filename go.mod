@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/fatih/structs v1.1.0
-	github.com/flipyap/microsoft-adcs-client v0.0.5
+	github.com/flipyap/microsoft-adcs-client v0.0.6
 	github.com/hashicorp/terraform-plugin-docs v0.16.0
 	github.com/hashicorp/terraform-plugin-framework v1.3.5
 	github.com/hashicorp/terraform-plugin-go v0.18.0
