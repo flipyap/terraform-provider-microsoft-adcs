@@ -8,7 +8,7 @@ import (
 	"flag"
 	"log"
 
-	"terraform-provider-microsoftadcs/internal/provider"
+	"terraform-provider-microsoft-adcs/internal/provider"
 
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
 )
@@ -40,7 +40,7 @@ func main() {
 
 	opts := providerserver.ServeOpts{
 		// TODO: Update this string with the published name of your provider.
-		Address: "registry.terraform.io/q2/microsoftadcs",
+		Address: "registry.terraform.io/flipyap/microsoft-adcs",
 		Debug:   debug,
 	}
 

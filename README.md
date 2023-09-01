@@ -37,7 +37,7 @@ Example of using the provider below:
 terraform {
   required_providers {
     microsoftadcs = {
-      source = "registry.terraform.io/q2/microsoftadcs"
+      source = "registry.terraform.io/flipyap/microsoft-adcs"
     }
   }
 }

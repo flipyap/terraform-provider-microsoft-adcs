@@ -1,4 +1,4 @@
-module terraform-provider-microsoftadcs
+module terraform-provider-microsoft-adcs
 
 go 1.19
 
